@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+from Crypto.Cipher import AES
+import base64
+import sys
+from __getch import getch
+
+# this one-liner pads a string to a 128-bit compatible block(hence 16) with ' ' used as a pad character
+pad = lambda s: s + (16 - len(s) % 16) * ' '
+
+def encode(key, str):
+	c = AES.new(key)
+	return base64.b64encode(c.encrypt(pad(str)))
+
+def decode(key, str):
+	c = AES.new(key)
+	return c.decrypt(base64.b64decode(str)).rstrip(' ')
+
+# Byron wrote this
+# takes in getch's quietly to enter a password without output being displayed to the commandline
+def password_input():
+	pwd = ""
+	while True:
+		k = getch()
+		if k != "\n" and k != "\r":
+			pwd += k
+		else:
+			break
+	return pwd
+
+def motd():
+	print "backyard crypter"
+	print "v2"
+	print "by byron"
+	print ""
+
+def show_help():
+	print "\nusage:"
+	print "   byc -help		:: displays this help screen"
+	print "   byc -e [filename]	:: requests password, then encodes the \n                            file as [filename].byc"
+
+	print "   byc -d [filename]	:: requests password, then decodes the \n                            file as [filename].decrypted"
+	print ""
+	print "Don't forget to cleanup your decrypted files when done!!!!!!!!"
+
+if(len(sys.argv) > 1):
+	if(sys.argv[1] == "-help"):
+		show_help()
+	elif(sys.argv[1] == "-e"):
+		with open(sys.argv[2], "r") as f:
+			read = f.read()
+		print "Data read successfully, please enter desired password:"
+		pwd = password_input()
+		coded = encode(pad(pwd), read)
+		with open(sys.argv[2] + ".byc", "w") as f:
+			f.write(coded)
+		print "successful run completed.\n"
+	elif(sys.argv[1] == "-d"):
+		with open(sys.argv[2] + ".byc", "r") as f:
+			read = f.read()
+		print "Data read successfully, please enter decryption password:"
+		pwd = password_input()
+		uncoded = decode(pad(pwd), read)
+		with open(sys.argv[2] + ".decrypted", "w") as f:
+			f.write("DON'T FORGET TO CLEAN UP THIS DECRYPTED FILE WHEN DONE.\n")
+			f.write(uncoded)
+		print "successful run completed.\n"
+else:
+	show_help()
