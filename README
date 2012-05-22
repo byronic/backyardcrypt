@@ -1,0 +1,36 @@
+backyardcrypt
+
+An open source python program that encrypts / decrypts files for you on the fly.
+
+Questions/comments/suggestions? Bug the author!! byronic #dot# entertainment #at# gmail, or message byronic on github
+
+AUTHOR // Byron L Lagrone
+
+DEPENDENCIES //
+Requires Crypto.Cipher (not included) and __getch.py (included)
+
+
+USAGE // 
+You can also get usage information by passing -help or no arguments to byc at the command prompt.
+
+byc -e [filename] 		:: requests a password, then writes the encrypted file [filename].byc
+byc -d [filename]		:: requests a password, then writes the decrypted file [filename].decrypted
+
+
+EXAMPLE //
+Asserting we have the file "example.txt" containing the text "Hello Encryption!", and a Linux command prompt:
+We wish to encrypt the file, and email it to a friend.
+In the Linux command prompt:
+
+>./byc -e example.txt
+
+The program prompts us to enter a password.
+After entering the password, a new file is created -- "example.txt.byc" in this case -- containing the encrypted text.
+We would first delete the un-encrypted file on the origin machine if necessary, then e-mail the .byc file to another computer containing backyardcrypt.
+
+In the Linux command prompt on the receiving end, once we have copied "example.txt.byc" to the same directory as backyardcrypt:
+
+>./byc -d example.txt
+
+The program will prompt us to enter the password.
+A file, "example.txt.decrypted", is immediately created. If the password was entered correctly, the file will contain the decrypted text plus a reminder to delete the file once finished. If the password was not entered correctly, the file will contain gibberish plus the reminder to delete the file once finished.
